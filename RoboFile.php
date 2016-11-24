@@ -121,7 +121,9 @@ class RoboFile extends \Robo\Tasks
             return $this->environment;
         }
 
-        return getenv('ROBO_PHPCS_ENVIRONMENT') ?: 'dev';
+        $envVarName = strtoupper(str_replace('-', '_', $this->packageName)) . '_ENVIRONMENT';
+
+        return getenv($envVarName) ?: 'dev';
     }
 
     protected function initComposerInfo(): self
