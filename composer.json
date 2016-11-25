@@ -1,0 +1,42 @@
+{
+    "name": "cheppers/robo-drush",
+    "description": "Drush related Robo tasks",
+    "license": "GPL-2.0+",
+    "config": {
+        "bin-dir": "bin",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "consolidation/robo": "~1.0",
+        "symfony/yaml": "^2.8||^3.1"
+    },
+    "require-dev": {
+        "cheppers/asset-jar": "^0.0.1",
+        "cheppers/git-hooks": "~0.0.9",
+        "cheppers/robo-git": "~0.0.2",
+        "cheppers/robo-phpcs": "~0.0",
+        "codeception/codeception": "^2.2"
+    },
+    "autoload":{
+        "psr-4":{
+            "Cheppers\\Robo\\Drush\\":"src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cheppers\\Robo\\Drush\\Tests\\Unit\\": "tests/unit/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@deploy-git-hooks"
+        ],
+        "post-update-cmd": [
+            "@deploy-git-hooks"
+        ],
+        "deploy-git-hooks": "\\Cheppers\\GitHooks\\Main::deploy"
+    }
+}
