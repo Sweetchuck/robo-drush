@@ -47,4 +47,26 @@ class UtilsTest extends Unit
     {
         $this->tester->assertEquals($expected, Utils::filterDisabled($items));
     }
+
+    /**
+     * @return array
+     */
+    public function casesIsValidMachineName()
+    {
+        return [
+            'empty' => [false, ''],
+            'space' => [false, ' '],
+            'space inner' => [false, 'a a'],
+            'invalid char' => [false, 'a!b'],
+            'good' => [true, 'a_b-c'],
+        ];
+    }
+
+    /**
+     * @dataProvider casesIsValidMachineName
+     */
+    public function testIsValidMachineName($expected, $name)
+    {
+        $this->tester->assertEquals($expected, Utils::isValidMachineName($name));
+    }
 }

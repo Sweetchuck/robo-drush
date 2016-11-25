@@ -8,4 +8,9 @@ class Utils
     {
         return gettype(reset($items)) === 'boolean' ? array_keys($items, true, true) : $items;
     }
+
+    public static function isValidMachineName(string $name): bool
+    {
+        return preg_match('/^[a-z0-9_-]+$/ui', $name);
+    }
 }

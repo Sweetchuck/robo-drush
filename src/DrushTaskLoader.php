@@ -6,30 +6,10 @@ trait DrushTaskLoader
 {
 
     /**
-     * @param array $option
-     *
-     * @return \Cheppers\Robo\Drush\Task\CoreStatus|\Robo\Collection\CollectionBuilder
+     * @return \Cheppers\Robo\Drush\Task\DrushTask|\Robo\Collection\CollectionBuilder
      */
-    protected function taskDrushCoreStatus(array $option = [])
+    protected function taskDrush($config, array $options = [], array $arguments = [])
     {
-        return $this->task(Task\CoreStatus::class, $option);
-    }
-
-    /**
-     * @param array $option
-     *
-     * @return \Cheppers\Robo\Drush\Task\Version|\Robo\Collection\CollectionBuilder
-     */
-    protected function taskDrushVersion(array $option = [])
-    {
-        return $this->task(Task\Version::class, $option);
-    }
-
-    /**
-     * @return \Cheppers\Robo\Drush\Task\PmEnable|\Robo\Collection\CollectionBuilder
-     */
-    protected function taskDrushPmEnable()
-    {
-        return $this->task(Task\PmEnable::class);
+        return $this->task(Task\DrushTask::class, $config, $options, $arguments);
     }
 }

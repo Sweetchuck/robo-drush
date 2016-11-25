@@ -10,23 +10,24 @@ class RoboFile extends \Robo\Tasks
     public function coreStatus(string $format = null)
     {
         return $this
-            ->taskDrushCoreStatus()
-            ->setOptionFormat($format)
+            ->taskDrush('core-status')
+            ->setCmdOption('format', $format)
             ->setOutput($this->output());
     }
 
     public function version(string $format = null)
     {
         return $this
-            ->taskDrushVersion()
-            ->setOptionFormat($format)
+            ->taskDrush('')
+            ->setCmdOption('version', true)
+            ->setCmdOption('format', $format)
             ->setOutput($this->output());
     }
 
     public function pmEnable()
     {
         return $this
-            ->taskDrushPmEnable()
-            ->setArguments(['devel', 'simpletest']);
+            ->taskDrush('pm-enable')
+            ->setCmdArguments(['devel', 'simpletest']);
     }
 }

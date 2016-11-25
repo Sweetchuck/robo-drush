@@ -45,12 +45,7 @@ class RoboFile extends \Robo\Tasks
     /**
      * @var string
      */
-    protected $phpExecutable = 'php';
-
-    /**
-     * @var string
-     */
-    protected $phpdbgExecutable = 'phpdbg';
+    protected $envNamePrefix = '';
 
     /**
      * Allowed values: dev, git-hook, jenkins.
@@ -65,7 +60,9 @@ class RoboFile extends \Robo\Tasks
     public function __construct()
     {
         putenv('COMPOSER_DISABLE_XDEBUG_WARN=1');
-        $this->initComposerInfo();
+        $this
+            ->initComposerInfo()
+            ->initEnvNamePrefix();
     }
 
     /**
@@ -115,15 +112,38 @@ class RoboFile extends \Robo\Tasks
             ]);
     }
 
+    /**
+     * @return $this
+     */
+    protected function initEnvNamePrefix()
+    {
+        $this->envNamePrefix = strtoupper(str_replace('-', '_', $this->packageName));
+
+        return $this;
+    }
+
+    protected function getEnvName(string $name): string
+    {
+        return "{$this->envNamePrefix}_" . strtoupper($name);
+    }
+
     protected function getEnvironment(): string
     {
         if ($this->environment) {
             return $this->environment;
         }
 
-        $envVarName = strtoupper(str_replace('-', '_', $this->packageName)) . '_ENVIRONMENT';
+        return getenv($this->getEnvName('environment')) ?: 'dev';
+    }
 
-        return getenv($envVarName) ?: 'dev';
+    protected function getPhpExecutable(): string
+    {
+        return getenv($this->getEnvName('php_executable')) ?: PHP_BINARY;
+    }
+
+    protected function getPhpdbgExecutable(): string
+    {
+        return getenv($this->getEnvName('phpdbg_executable')) ?: PHP_BINDIR . DIRECTORY_SEPARATOR . 'phpdbg';
     }
 
     protected function initComposerInfo(): self
@@ -174,10 +194,11 @@ class RoboFile extends \Robo\Tasks
         $cmdArgs = [];
         if ($this->isPhpDbgAvailable() && !$this->isPhpExtensionAvailable('xdebug')) {
             $cmdPattern = '%s -qrr %s';
-            $cmdArgs[] = escapeshellcmd($this->phpdbgExecutable);
+            $cmdArgs[] = escapeshellcmd($this->getPhpdbgExecutable());
             $cmdArgs[] = escapeshellarg("{$this->binDir}/codecept");
         } else {
-            $cmdPattern = '%s';
+            $cmdPattern = '%s %s';
+            $cmdArgs[] = escapeshellcmd($this->getPhpExecutable());
             $cmdArgs[] = escapeshellcmd("{$this->binDir}/codecept");
         }
 
@@ -281,7 +302,7 @@ class RoboFile extends \Robo\Tasks
 
     protected function isPhpExtensionAvailable(string $extension): bool
     {
-        $command = sprintf('%s -m', escapeshellcmd($this->phpExecutable));
+        $command = sprintf('%s -m', escapeshellcmd($this->getPhpExecutable()));
 
         $process = new Process($command);
         $exitCode = $process->run();
@@ -296,7 +317,7 @@ class RoboFile extends \Robo\Tasks
     {
         $command = sprintf(
             '%s -i | grep -- %s',
-            escapeshellcmd($this->phpExecutable),
+            escapeshellcmd($this->getPhpExecutable()),
             escapeshellarg('--enable-phpdbg')
         );
 
