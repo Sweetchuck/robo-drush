@@ -8,7 +8,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class Base implements StdoutputParserInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public static function parse(DrushTask $task, string $stdOutput)
     {
         $format = $task->getCmdOption('format');

@@ -6,6 +6,7 @@ use Cheppers\AssetJar\AssetJarAware;
 use Cheppers\AssetJar\AssetJarAwareInterface;
 use Cheppers\Robo\Drush\CmdOptionHandlerInterface;
 use Cheppers\Robo\Drush\StdOutputParser\Base as StdOutputParserBase;
+use Cheppers\Robo\Drush\StdOutputParser\PmList as StdOutputParserPmList;
 use Cheppers\Robo\Drush\StdOutputParser\Version as StdOutputParserVersion;
 use Cheppers\Robo\Drush\CmdOptionHandler\Flag as CmdOptionHandlerFlag;
 use Cheppers\Robo\Drush\CmdOptionHandler\Value as CmdOptionHandlerValue;
@@ -36,25 +37,8 @@ class DrushTask extends \Robo\Task\BaseTask implements
                 ],
             ],
         ],
-        'core-status' => [
-            'options' => [
-                'format' => [
-                    'name' => 'format',
-                    'handler' => CmdOptionHandlerValue::class,
-                ],
-                'root' => [
-                    'name' => 'root',
-                    'handler' => CmdOptionHandlerValue::class,
-                ],
-            ],
-        ],
-        'pm-enable' => [
-            'options' => [
-                'root' => [
-                    'name' => 'root',
-                    'handler' => CmdOptionHandlerValue::class,
-                ],
-            ],
+        'pm-list' => [
+            'stdOutputParser' => StdOutputParserPmList::class,
         ],
     ];
 
@@ -199,9 +183,7 @@ class DrushTask extends \Robo\Task\BaseTask implements
     /**
      * @var array
      */
-    protected $assets = [
-        'version' => null,
-    ];
+    protected $assets = [];
 
     /**
      * @var string
@@ -212,6 +194,14 @@ class DrushTask extends \Robo\Task\BaseTask implements
     {
         if (is_string($config)) {
             $config = ['cmdName' => $config];
+        }
+
+        if (isset($config['assetJar'])) {
+            $this->setAssetJar($config['assetJar']);
+        }
+
+        if (isset($config['assetJarMapping'])) {
+            $this->setAssetJarMapping($config['assetJarMapping']);
         }
 
         if (isset($config['workingDirectory'])) {
@@ -316,6 +306,7 @@ class DrushTask extends \Robo\Task\BaseTask implements
         $exitCode = $process->run();
         if ($exitCode === 0) {
             $stdOutput = $process->getOutput();
+            $this->output()->write($stdOutput);
             $this
                 ->runParseStdOutput($stdOutput)
                 ->runReleaseAssets();
