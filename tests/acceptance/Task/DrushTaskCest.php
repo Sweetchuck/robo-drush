@@ -10,17 +10,15 @@ class DrushTaskCest
 
     public function drushVersion(AcceptanceTester $i)
     {
-        $i
-            ->runRoboTask('version')
-            ->expectTheExitCodeToBe(0)
-            ->seeThisTextInTheStdOutput("Drush Version   :  {$this->drushVersion}");
+        $i->runRoboTask('version');
+        $i->expectTheExitCodeToBe(0);
+        $i->seeThisTextInTheStdOutput("Drush Version   :  {$this->drushVersion}");
     }
 
     public function drushVersionYaml(AcceptanceTester $i)
     {
-        $i
-            ->runRoboTask('version', [], ['yaml'])
-            ->expectTheExitCodeToBe(0)
-            ->seeThisTextInTheStdOutput($this->drushVersion);
+        $i->runRoboTask('version', [], ['yaml']);
+        $i->expectTheExitCodeToBe(0);
+        $i->seeThisTextInTheStdOutput($this->drushVersion);
     }
 }
