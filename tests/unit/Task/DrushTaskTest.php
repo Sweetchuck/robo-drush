@@ -296,19 +296,23 @@ class DrushTaskTest extends Unit
 
         $result = $task->run();
 
-        $this->tester->assertContains(
+        $this->tester->assertEquals(
             $expectedStdOutput,
             $mainStdOutput->output,
-            'Output contains'
+            'Output equals'
         );
 
-        $this->tester->assertEquals($expectedResultData, $result->getData());
+        $this->tester->assertEquals(
+            $expectedResultData,
+            $result->getData(),
+            'Result::data equals'
+        );
 
         if ($task->hasAssetJar()) {
             $this->tester->assertEquals(
                 $expectedResultData['result'],
                 $task->getAssetJarValue('result'),
-                'Output equals'
+                'AssetJar::result equals'
             );
         }
     }

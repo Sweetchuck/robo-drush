@@ -11,8 +11,7 @@ class RoboFile extends \Robo\Tasks
     {
         return $this
             ->taskDrush('core-status')
-            ->setCmdOption('format', $format)
-            ->setOutput($this->output());
+            ->setCmdOption('format', $format);
     }
 
     public function version(string $format = null)
@@ -20,14 +19,6 @@ class RoboFile extends \Robo\Tasks
         return $this
             ->taskDrush('')
             ->setCmdOption('version', true)
-            ->setCmdOption('format', $format)
-            ->setOutput($this->output());
-    }
-
-    public function pmEnable()
-    {
-        return $this
-            ->taskDrush('pm-enable')
-            ->setCmdArguments(['devel', 'simpletest']);
+            ->setCmdOption('format', $format);
     }
 }
