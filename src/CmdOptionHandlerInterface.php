@@ -4,5 +4,8 @@ namespace Cheppers\Robo\Drush;
 
 interface CmdOptionHandlerInterface
 {
-    public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs);
+    /**
+     * Add the $option and $value to the $cmdPattern and $cmdArgs.
+     */
+    public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs): void;
 }

@@ -7,7 +7,9 @@ use Cheppers\Robo\Drush\Task\DrushTask;
 
 class Version implements StdoutputParserInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public static function parse(DrushTask $task, string $stdOutput)
     {
         $format = $task->getCmdOption('format');

@@ -4,7 +4,6 @@ namespace Cheppers\Robo\Drush;
 
 trait DrushTaskLoader
 {
-
     /**
      * @return \Cheppers\Robo\Drush\Task\DrushTask|\Robo\Collection\CollectionBuilder
      */

@@ -54,7 +54,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->workingDirectory;
     }
 
-    public function setWorkingDirectory(string $workingDirectory): self
+    /**
+     * @return $this
+     */
+    public function setWorkingDirectory(string $workingDirectory)
     {
         $this->workingDirectory = $workingDirectory;
 
@@ -73,7 +76,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->phpExecutable;
     }
 
-    public function setPhpExecutable(string $phpExecutable): self
+    /**
+     * @return $this
+     */
+    public function setPhpExecutable(string $phpExecutable)
     {
         $this->phpExecutable = $phpExecutable;
 
@@ -89,7 +95,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->drushExecutable;
     }
 
-    public function setDrushExecutable(string $drushExecutable): self
+    /**
+     * @return $this
+     */
+    public function setDrushExecutable(string $drushExecutable)
     {
         $this->drushExecutable = $drushExecutable;
 
@@ -108,7 +117,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->cmdName;
     }
 
-    public function setCmdName(string $cmdName): self
+    /**
+     * @return $this
+     */
+    public function setCmdName(string $cmdName)
     {
         if ($cmdName && !Utils::isValidMachineName($cmdName)) {
             throw new \InvalidArgumentException("Invalid command name: '$cmdName'");
@@ -128,7 +140,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->cmdOptions;
     }
 
-    public function setCmdOptions(array $options): self
+    /**
+     * @return $this
+     */
+    public function setCmdOptions(array $options)
     {
 
         foreach ($options as $name => $value) {
@@ -143,7 +158,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->cmdOptions[$name] ?? null;
     }
 
-    public function setCmdOption(string $name, $value): self
+    /**
+     * @return $this
+     */
+    public function setCmdOption(string $name, $value)
     {
         if (!Utils::isValidMachineName($name)) {
             throw new \InvalidArgumentException("Invalid option name: '$name'");
@@ -166,7 +184,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this->cmdArguments;
     }
 
-    public function setCmdArguments(array $cmdArguments): self
+    /**
+     * @return $this
+     */
+    public function setCmdArguments(array $cmdArguments)
     {
         $this->cmdArguments = $cmdArguments;
 
@@ -318,8 +339,6 @@ class DrushTask extends \Robo\Task\BaseTask implements
     }
 
     /**
-     * @param string $stdOutput
-     *
      * @return $this
      */
     protected function runParseStdOutput(string $stdOutput)
@@ -346,7 +365,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this;
     }
 
-    protected function runReleaseAssets(): self
+    /**
+     * @return $this
+     */
+    protected function runReleaseAssets()
     {
         if ($this->hasAssetJar()) {
             foreach ($this->assets as $name => $value) {
