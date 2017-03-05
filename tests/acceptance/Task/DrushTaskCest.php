@@ -6,7 +6,7 @@ use \AcceptanceTester;
 
 class DrushTaskCest
 {
-    protected $drushVersion = '8.1.2';
+    protected $drushVersion = '8.1.10';
 
     public function drushVersion(AcceptanceTester $i)
     {
