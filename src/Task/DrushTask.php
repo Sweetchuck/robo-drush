@@ -282,15 +282,7 @@ class DrushTask extends \Robo\Task\BaseTask implements
             $option = static::$commands[$cmdName]['options'][$name] ?? ['name' => $name];
 
             /** @var CmdOptionHandlerInterface $optionHandler */
-            $optionHandler = $option['handler'] ?? null;
-            if (!$optionHandler) {
-                if (gettype($value) === 'boolean') {
-                    $optionHandler = CmdOptionHandlerFlag::class;
-                } else {
-                    $optionHandler = CmdOptionHandlerValue::class;
-                }
-            }
-
+            $optionHandler = $this->getCmdOptionHandler($cmdName, $name, $value);
             $optionHandler::getCommand($option, $value, $cmdPattern, $cmdArgs);
         }
 
@@ -381,6 +373,9 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this;
     }
 
+    /**
+     * @todo Improve.
+     */
     protected function findDrushExecutable(): string
     {
         $suggestions = [
@@ -396,5 +391,23 @@ class DrushTask extends \Robo\Task\BaseTask implements
         }
 
         return 'drush';
+    }
+
+    protected function getCmdMeta(string $cmdName): array
+    {
+        return array_replace_recursive(
+            static::$commands[''],
+            static::$commands[$cmdName] ?? []
+        );
+    }
+
+    protected function getCmdOptionHandler(string $cmdName, string $optionName, $value): string
+    {
+        $command = $this->getCmdMeta($cmdName);
+        if (!empty($command['options'][$optionName]['handler'])) {
+            return $command['options'][$optionName]['handler'];
+        }
+
+        return gettype($value) === 'boolean' ? CmdOptionHandlerFlag::class : CmdOptionHandlerValue::class;
     }
 }
