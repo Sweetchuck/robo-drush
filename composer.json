@@ -21,9 +21,9 @@
         "cheppers/robo-phpcs": "^0.0",
         "codeception/codeception": "^2.2"
     },
-    "autoload":{
-        "psr-4":{
-            "Cheppers\\Robo\\Drush\\":"src/"
+    "autoload": {
+        "psr-4": {
+            "Cheppers\\Robo\\Drush\\": "src/"
         }
     },
     "autoload-dev": {
