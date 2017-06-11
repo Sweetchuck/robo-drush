@@ -1,42 +1,70 @@
 <?php
 
-namespace Helper\Module;
+namespace Cheppers\Robo\Drush\Test\Helper\Module;
 
-/**
- * Wrapper for basic shell commands and shell output.
- */
-class RoboTaskRunner extends Cli
+use Codeception\Module as CodeceptionModule;
+use Cheppers\Robo\Drush\Test\Helper\Dummy\Output as DummyOutput;
+use Robo\Robo;
+use Robo\Runner;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class RoboTaskRunner extends CodeceptionModule
 {
     /**
-     * @param string $taskName
-     * @param array $options
-     * @param array $arguments
-     *
-     * @return $this
+     * @var \Cheppers\Robo\Drush\Test\Helper\Dummy\Output[]
      */
-    public function runRoboTask(string $taskName, array $options = [], array $arguments = [])
+    protected $roboTaskStdOutput = [];
+
+    /**
+     * @var int[]
+     */
+    protected $roboTaskExitCode = [];
+
+    public function getRoboTaskExitCode(string $id): int
     {
-        $cmdPattern = 'cd %s && ../../bin/robo %s';
-        $cmdArgs = [
-            escapeshellarg(codecept_data_dir()),
-            escapeshellarg($taskName),
+        return $this->roboTaskExitCode[$id];
+    }
+
+    public function getRoboTaskStdOutput(string $id): string
+    {
+        return $this->roboTaskStdOutput[$id]->output;
+    }
+
+    public function getRoboTaskStdError(string $id): string
+    {
+        /** @var \Cheppers\Robo\Drush\Test\Helper\Dummy\Output $errorOutput */
+        $errorOutput = $this->roboTaskStdOutput[$id]->getErrorOutput();
+
+        return $errorOutput->output;
+    }
+
+    public function runRoboTask(string $id, string $class, string ...$args): void
+    {
+        if (isset($this->roboTaskStdOutput[$id])) {
+            throw new \InvalidArgumentException();
+        }
+
+        $config = [
+            'verbosity' => OutputInterface::VERBOSITY_DEBUG,
+            'colors' => false,
         ];
+        $this->roboTaskStdOutput[$id] = new DummyOutput($config);
 
-        foreach ($options as $option => $value) {
-            $cmdPattern .= " --$option";
-            if ($value !== null) {
-                $cmdPattern .= '=%s';
-                $cmdArgs[] = escapeshellarg($value);
-            }
+        array_unshift($args, 'RoboTaskRunner.php', '--no-ansi');
+
+        $containerBackup = Robo::hasContainer() ? Robo::getContainer() : null;
+        $container = Robo::createDefaultContainer(null, $this->roboTaskStdOutput[$id]);
+        $container->add('output', $this->roboTaskStdOutput[$id], false);
+        Robo::setContainer($container);
+
+        $this->roboTaskExitCode[$id] = (new Runner($class))
+            ->setContainer($container)
+            ->execute($args);
+
+        if ($containerBackup) {
+            Robo::setContainer($containerBackup);
+        } else {
+            Robo::unsetContainer();
         }
-
-        $cmdPattern .= str_repeat(' %s', count($arguments));
-        foreach ($arguments as $argument) {
-            $cmdArgs[] = escapeshellarg($argument);
-        }
-
-        $this->runShellCommand(vsprintf($cmdPattern, $cmdArgs));
-
-        return $this;
     }
 }

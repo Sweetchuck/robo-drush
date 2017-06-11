@@ -1,26 +1,20 @@
 <?php
 
-namespace Helper\Dummy;
+namespace Cheppers\Robo\Drush\Test\Helper\Dummy;
 
-/**
- * Class Process.
- *
- * @package Helper
- */
 class Process extends \Symfony\Component\Process\Process
 {
-
     /**
      * @var array
      */
     public static $prophecy = [];
 
     /**
-     * @var \Helper\Dummy\Process[]
+     * @var static[]
      */
     public static $instances = null;
 
-    public static function reset()
+    public static function reset(): void
     {
         static::$prophecy = [];
         static::$instances = [];

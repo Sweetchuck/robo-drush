@@ -4,13 +4,17 @@ namespace Cheppers\Robo\Drush\Tests\Unit\Task;
 
 use Cheppers\AssetJar\AssetJar;
 use Cheppers\Robo\Drush\Task\DrushTask;
+use Cheppers\Robo\Drush\Test\Helper\Dummy\Output as DummyOutput;
+use Cheppers\Robo\Drush\Test\Helper\Dummy\Process as DummyProcess;
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
+use Robo\Robo;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class DrushTaskTest extends Unit
 {
     /**
-     * @var \UnitTester
+     * @var \Cheppers\Robo\Drush\Test\UnitTester
      */
     protected $tester;
 
@@ -265,10 +269,14 @@ class DrushTaskTest extends Unit
         array $options,
         array $arguments
     ) {
-        $container = \Robo\Robo::createDefaultContainer();
-        \Robo\Robo::setContainer($container);
+        $container = Robo::createDefaultContainer();
+        Robo::setContainer($container);
 
-        $mainStdOutput = new \Helper\Dummy\Output();
+        $outputConfig = [
+            'verbosity' => OutputInterface::VERBOSITY_DEBUG,
+            'colors' => false,
+        ];
+        $mainStdOutput = new DummyOutput($outputConfig);
 
         $config += [
             'workingDirectory' => '.',
@@ -280,16 +288,16 @@ class DrushTaskTest extends Unit
             DrushTask::class,
             [$config, $options, $arguments],
             [
-                'processClass' => \Helper\Dummy\Process::class,
+                'processClass' => DummyProcess::class,
             ]
         );
 
         $task->setLogger($container->get('logger'));
         $task->setOutput($mainStdOutput);
 
-        $processIndex = count(\Helper\Dummy\Process::$instances);
+        $processIndex = count(DummyProcess::$instances);
 
-        \Helper\Dummy\Process::$prophecy[$processIndex] = [
+        DummyProcess::$prophecy[$processIndex] = [
             'exitCode' => 0,
             'stdOutput' => $expectedStdOutput,
         ];

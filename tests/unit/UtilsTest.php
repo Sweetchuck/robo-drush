@@ -15,7 +15,7 @@ use Codeception\Test\Unit;
 class UtilsTest extends Unit
 {
     /**
-     * @var \UnitTester
+     * @var \Cheppers\Robo\Drush\Test\UnitTester
      */
     protected $tester;
 

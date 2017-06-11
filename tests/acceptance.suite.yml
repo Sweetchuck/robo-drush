@@ -2,5 +2,7 @@
 class_name: AcceptanceTester
 modules:
     enabled:
-        - \Helper\Acceptance
-        - \Helper\Module\RoboTaskRunner
+        - Asserts
+        - Filesystem
+        - \Cheppers\Robo\Drush\Test\Helper\Acceptance
+        - \Cheppers\Robo\Drush\Test\Helper\Module\RoboTaskRunner

@@ -1,3 +1,6 @@
+
+namespace: 'Cheppers\Robo\Drush\Test'
+
 actor: 'Tester'
 
 paths:
