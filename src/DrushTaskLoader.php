@@ -7,8 +7,8 @@ trait DrushTaskLoader
     /**
      * @return \Cheppers\Robo\Drush\Task\DrushTask|\Robo\Collection\CollectionBuilder
      */
-    protected function taskDrush($config, array $options = [], array $arguments = [])
+    protected function taskDrush($config, array $globalOptions = [], array $arguments = [], array $options = [])
     {
-        return $this->task(Task\DrushTask::class, $config, $options, $arguments);
+        return $this->task(Task\DrushTask::class, $config, $globalOptions, $arguments, $options);
     }
 }

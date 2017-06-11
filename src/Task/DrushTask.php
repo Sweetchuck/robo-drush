@@ -28,11 +28,18 @@ class DrushTask extends \Robo\Task\BaseTask implements
     use AssetJarAware;
     use IO;
 
+    public static $globalOptions = [
+        'alias-path' => [
+            'settings' => [
+                'separator' => PATH_SEPARATOR,
+            ],
+        ],
+    ];
+
     public static $commands = [
         '' => [
             'options' => [
                 'version' => [
-                    'name' => 'version',
                     'handler' => CmdOptionHandlerFlag::class,
                 ],
             ],
@@ -105,6 +112,33 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this;
     }
     //endregion
+
+    // region Option - globalOptions.
+    /**
+     * @var array
+     */
+    protected $globalOptionValues = [];
+
+    public function getGlobalOptions(): array
+    {
+        return $this->globalOptionValues;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setGlobalOptions(array $value)
+    {
+        $this->globalOptionValues = $value;
+
+        return $this;
+    }
+
+    public function getGlobalOption(string $name)
+    {
+        return $this->globalOptionValues[$name] ?? null;
+    }
+    // endregion
 
     //region Option - cmdName.
     /**
@@ -211,39 +245,53 @@ class DrushTask extends \Robo\Task\BaseTask implements
      */
     protected $assetNameOfStdOutput = 'result';
 
-    public function __construct($config, array $options = [], array $arguments = [])
+    public function __construct($config, array $globalOptions = [], array $arguments = [], array $options = [])
     {
         if (is_string($config)) {
             $config = ['cmdName' => $config];
         }
 
-        if (isset($config['assetJar'])) {
-            $this->setAssetJar($config['assetJar']);
-        }
-
-        if (isset($config['assetJarMapping'])) {
-            $this->setAssetJarMapping($config['assetJarMapping']);
-        }
-
-        if (isset($config['workingDirectory'])) {
-            $this->setWorkingDirectory($config['workingDirectory']);
-        }
-
-        if (isset($config['phpExecutable'])) {
-            $this->setPhpExecutable($config['phpExecutable']);
-        }
-
-        if (isset($config['drushExecutable'])) {
-            $this->setDrushExecutable($config['drushExecutable']);
-        }
-
-        if (isset($config['cmdName'])) {
-            $this->setCmdName($config['cmdName']);
-        }
-
         $this
-            ->setCmdOptions($options)
-            ->setCmdArguments($arguments);
+            ->setConfiguration($config)
+            ->setGlobalOptions($globalOptions)
+            ->setCmdArguments($arguments)
+            ->setCmdOptions($options);
+    }
+
+    /**
+     * @return $this
+     */
+    public function setConfiguration(array $config)
+    {
+        foreach ($config as $key => $value) {
+            switch ($key) {
+                case 'assetJar':
+                    $this->setAssetJar($value);
+                    break;
+
+                case 'assetJarMapping':
+                    $this->setAssetJarMapping($value);
+                    break;
+
+                case 'workingDirectory':
+                    $this->setWorkingDirectory($value);
+                    break;
+
+                case 'phpExecutable':
+                    $this->setPhpExecutable($value);
+                    break;
+
+                case 'drushExecutable':
+                    $this->setDrushExecutable($value);
+                    break;
+
+                case 'cmdName':
+                    $this->setCmdName($value);
+                    break;
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -276,16 +324,16 @@ class DrushTask extends \Robo\Task\BaseTask implements
             escapeshellarg($drushExecutable)
             : escapeshellcmd($drushExecutable);
 
-        $cmdName = $this->getCmdName();
-        foreach (array_keys($this->getCmdOptions()) as $name) {
-            $value = $this->getCmdOption($name);
-            $option = static::$commands[$cmdName]['options'][$name] ?? ['name' => $name];
-
+        foreach ($this->getGlobalOptions() as $optionName => $optionValue) {
+            $cliOptionName = strlen($optionName) === 1 ? "-$optionName" : "--$optionName";
+            $option = static::$globalOptions[$optionName] ?? [];
+            $option += ['name' => $cliOptionName];
             /** @var CmdOptionHandlerInterface $optionHandler */
-            $optionHandler = $this->getCmdOptionHandler($cmdName, $name, $value);
-            $optionHandler::getCommand($option, $value, $cmdPattern, $cmdArgs);
+            $optionHandler = $this->getOptionHandler($option, $optionValue);
+            $optionHandler::getCommand($option, $optionValue, $cmdPattern, $cmdArgs);
         }
 
+        $cmdName = $this->getCmdName();
         if ($cmdName) {
             $cmdPattern .= ' %s';
             $cmdArgs[] = $cmdName;
@@ -297,7 +345,16 @@ class DrushTask extends \Robo\Task\BaseTask implements
             $cmdArgs[] = escapeshellarg($cmdArgument);
         }
 
-        // @todo Handle additional options.
+        foreach ($this->getCmdOptions() as $optionName => $optionValue) {
+            $cliOptionName = strlen($optionName) === 1 ? "-$optionName" : "--$optionName";
+            $option = static::$commands[$cmdName]['options'][$optionName] ?? [];
+            $option += ['name' => $cliOptionName];
+
+            /** @var CmdOptionHandlerInterface $optionHandler */
+            $optionHandler = $this->getOptionHandler($option, $optionValue);
+            $optionHandler::getCommand($option, $optionValue, $cmdPattern, $cmdArgs);
+        }
+
         return vsprintf($cmdPattern, $cmdArgs);
     }
 
@@ -314,7 +371,7 @@ class DrushTask extends \Robo\Task\BaseTask implements
             ]
         );
         /** @var \Symfony\Component\Process\Process $process */
-        $process = new $this->processClass($this->getCommand());
+        $process = new $this->processClass($command);
 
         $exitCode = $process->run();
         if ($exitCode === 0) {
@@ -342,7 +399,7 @@ class DrushTask extends \Robo\Task\BaseTask implements
         $stdOutputParser = $command['stdOutputParser'] ?? null;
         if ($stdOutputParser === null) {
             if (!$cmdName) {
-                if ($this->getCmdOption('version') === true) {
+                if ($this->getGlobalOption('version') === true) {
                     $stdOutputParser = StdOutputParserVersion::class;
                 }
             } else {
@@ -393,19 +450,10 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return 'drush';
     }
 
-    protected function getCmdMeta(string $cmdName): array
+    protected function getOptionHandler(array $option, $value): string
     {
-        return array_replace_recursive(
-            static::$commands[''],
-            static::$commands[$cmdName] ?? []
-        );
-    }
-
-    protected function getCmdOptionHandler(string $cmdName, string $optionName, $value): string
-    {
-        $command = $this->getCmdMeta($cmdName);
-        if (!empty($command['options'][$optionName]['handler'])) {
-            return $command['options'][$optionName]['handler'];
+        if (!empty($option['handler'])) {
+            return $option['handler'];
         }
 
         return gettype($value) === 'boolean' ? CmdOptionHandlerFlag::class : CmdOptionHandlerValue::class;

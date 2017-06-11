@@ -12,10 +12,22 @@ class Value implements CmdOptionHandlerInterface
      */
     public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs): void
     {
-        if ($value || $value === '') {
-            $cliValue = (is_array($value)) ? implode(',', Utils::filterDisabled($value)) : $value;
+        $defaultOption = [
+            'settings' => [
+                'separator' => ',',
+            ],
+        ];
+        $option = array_replace_recursive($defaultOption, $option);
 
-            $cmdPattern .= " --{$option['name']}=%s";
+        $items = null;
+
+        if ($value || $value === '') {
+            $items = is_array($value) ? Utils::filterDisabled($value) : [$value];
+        }
+
+        if ($items) {
+            $cliValue = implode($option['settings']['separator'], $items);
+            $cmdPattern .= " {$option['name']}=%s";
             $cmdArgs[] = escapeshellarg($cliValue);
         }
     }

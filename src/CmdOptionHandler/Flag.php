@@ -12,7 +12,7 @@ class Flag implements CmdOptionHandlerInterface
     public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs): void
     {
         if ($value === true) {
-            $cmdPattern .= " --{$option['name']}";
+            $cmdPattern .= " {$option['name']}";
         }
     }
 }

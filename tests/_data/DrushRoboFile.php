@@ -7,14 +7,6 @@ class DrushRoboFile extends \Robo\Tasks
 
     use \Cheppers\Robo\Drush\DrushTaskLoader;
 
-    public function coreStatus(string $format = null)
-    {
-        return $this
-            ->taskDrush('core-status')
-            ->setOutput($this->output())
-            ->setCmdOption('format', $format);
-    }
-
     public function version(string $format = null)
     {
         return $this
