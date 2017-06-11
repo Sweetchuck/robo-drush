@@ -23,29 +23,20 @@ class DrushTaskTest extends Unit
         return [
             'empty' => [
                 'drush',
-                [],
-                [],
-                [],
             ],
             'c:workingDirectory' => [
                 "cd 'foo/bar' && drush",
                 ['workingDirectory' => 'foo/bar'],
-                [],
-                [],
             ],
             'c:phpExecutable' => [
                 "php7 'drush'",
                 ['phpExecutable' => 'php7'],
-                [],
-                [],
             ],
             'c:drushExecutable' => [
                 'my-drush',
                 ['drushExecutable' => 'my-drush'],
-                [],
-                [],
             ],
-            'o:format o:version' => [
+            'g:format o:version' => [
                 "drush --format='json' --version --yes",
                 [],
                 [
@@ -53,13 +44,10 @@ class DrushTaskTest extends Unit
                     'version' => true,
                     'yes' => true,
                 ],
-                [],
             ],
             'n:my-command' => [
                 "drush my-command",
                 ['cmdName' => 'my-command'],
-                [],
-                [],
             ],
             'a:list' => [
                 "drush 'a' 'b'",
@@ -73,17 +61,36 @@ class DrushTaskTest extends Unit
                 [],
                 ['a' => true, 'b' => false, 'c' => true],
             ],
+            'cgao:enabled' => [
+                "drush --yes a 'b' --foo='bar'",
+                ['cmdName' => 'a'],
+                ['yes' => true],
+                ['b'],
+                ['foo' => 'bar'],
+            ],
+            'rsync' => [
+                "drush --root='my-dir' rsync '@from' '@to' --exclude='*.txt'",
+                ['cmdName' => 'rsync'],
+                ['root' => 'my-dir'],
+                ['@from', '@to'],
+                ['exclude' => '*.txt'],
+            ],
         ];
     }
 
     /**
      * @dataProvider casesGetCommand
      */
-    public function testGetCommand(string $expected, array $config, array $options, array $arguments)
-    {
+    public function testGetCommand(
+        string $expected,
+        array $config = [],
+        array $globalOptions = [],
+        array $arguments = [],
+        array $options = []
+    ): void {
         $config += ['drushExecutable' => 'drush'];
 
-        $task = new DrushTask($config, $options, $arguments);
+        $task = new DrushTask($config, $globalOptions, $arguments, $options);
         $this->tester->assertEquals($expected, $task->getCommand());
     }
 
@@ -109,10 +116,7 @@ class DrushTaskTest extends Unit
         }
     }
 
-    /**
-     * @return array
-     */
-    public function casesRun()
+    public function casesRunSuccess(): array
     {
         return [
             'drush --version' => [
@@ -120,35 +124,38 @@ class DrushTaskTest extends Unit
                 ['result' => '8.4.2'],
                 ['assetJar' => new AssetJar()],
                 ['version' => true],
-                [],
             ],
             'drush --version --format=json' => [
                 json_encode('8.4.2'),
                 ['result' => '8.4.2'],
                 ['assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'json'],
+                ['version' => true],
                 [],
+                ['format' => 'json'],
             ],
             'drush --version --format=var_export' => [
                 '$variables["Drush Version"] = \'8.4.2\';',
                 ['result' => '8.4.2'],
                 ['assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'var_export'],
+                ['version' => true],
                 [],
+                ['format' => 'var_export'],
             ],
             'drush --version --format=string' => [
                 '8.4.2',
                 ['result' => '8.4.2'],
                 ['assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'string'],
+                ['version' => true],
                 [],
+                ['format' => 'string'],
             ],
             'drush --version --format=yaml' => [
                 '8.4.2',
                 ['result' => '8.4.2'],
                 ['assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'yaml'],
+                ['version' => true],
                 [],
+                ['format' => 'yaml'],
             ],
             'drush pm-list --format=yaml' => [
                 json_encode([
@@ -200,8 +207,9 @@ class DrushTaskTest extends Unit
                     ],
                 ]],
                 ['cmdName' => 'pm-list', 'assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'yaml'],
+                ['version' => true],
                 [],
+                ['format' => 'yaml'],
             ],
             'drush pm-list --format=json' => [
                 json_encode([
@@ -253,21 +261,37 @@ class DrushTaskTest extends Unit
                     ],
                 ]],
                 ['cmdName' => 'pm-list', 'assetJar' => new AssetJar()],
-                ['version' => true, 'format' => 'json'],
+                ['version' => true],
                 [],
+                ['format' => 'json'],
+            ],
+            'StdOutputParserBase' => [
+                json_encode([
+                    'foo' => ['bar' => 42],
+                ]),
+                [
+                    'result' => [
+                        'foo' => ['bar' => 42],
+                    ],
+                ],
+                ['cmdName' => 'unknown', 'assetJar' => new AssetJar()],
+                [],
+                [],
+                ['format' => 'json'],
             ],
         ];
     }
 
     /**
-     * @dataProvider casesRun
+     * @dataProvider casesRunSuccess
      */
-    public function testRun(
+    public function testRunSuccess(
         string $expectedStdOutput,
         array $expectedResultData,
-        array $config,
-        array $options,
-        array $arguments
+        array $config = [],
+        array $globalOptions = [],
+        array $arguments = [],
+        array $options = []
     ) {
         $container = Robo::createDefaultContainer();
         Robo::setContainer($container);
@@ -279,14 +303,13 @@ class DrushTaskTest extends Unit
         $mainStdOutput = new DummyOutput($outputConfig);
 
         $config += [
-            'workingDirectory' => '.',
             'assetJarMapping' => ['result' => ['drush', 'result']],
         ];
 
         /** @var \Cheppers\Robo\Drush\Task\DrushTask $task */
         $task = Stub::construct(
             DrushTask::class,
-            [$config, $options, $arguments],
+            [$config, $globalOptions, $arguments, $options],
             [
                 'processClass' => DummyProcess::class,
             ]
@@ -321,6 +344,90 @@ class DrushTaskTest extends Unit
                 $expectedResultData['result'],
                 $task->getAssetJarValue('result'),
                 'AssetJar::result equals'
+            );
+        }
+    }
+
+    public function casesRunFail(): array
+    {
+        return [
+            'basic' => [
+                [
+                    'exitCode' => 1,
+                    'stdOutput' => '',
+                    'stdError' => '',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesRunFail
+     */
+    public function testRunFail(array $expected, array $processProphecy = []): void
+    {
+        $processProphecy += [
+            'exitCode' => 1,
+            'stdOutput' => '',
+            'stdError' => '',
+        ];
+
+        $container = Robo::createDefaultContainer();
+        Robo::setContainer($container);
+
+        $outputConfig = [
+            'verbosity' => OutputInterface::VERBOSITY_DEBUG,
+            'colors' => false,
+        ];
+        $mainStdOutput = new DummyOutput($outputConfig);
+
+         /** @var \Cheppers\Robo\Drush\Task\DrushTask $task */
+        $task = Stub::construct(
+            DrushTask::class,
+            [[], [], [], []],
+            [
+                'processClass' => DummyProcess::class,
+            ]
+        );
+
+        $task->setLogger($container->get('logger'));
+        $task->setOutput($mainStdOutput);
+
+        $processIndex = count(DummyProcess::$instances);
+
+        DummyProcess::$prophecy[$processIndex] = $processProphecy;
+
+        $result = $task->run();
+
+        if (isset($expected['exitCode'])) {
+            $this->tester->assertEquals(
+                $expected['exitCode'],
+                $result->getExitCode(),
+                'Exit code equals'
+            );
+        }
+
+        if (isset($expected['stdOutput'])) {
+            $this->tester->assertEquals(
+                $expected['stdOutput'],
+                $mainStdOutput->output,
+                'StdOutput equals'
+            );
+        }
+
+        if (isset($expected['stdError'])) {
+            $this->tester->assertEquals(
+                $expected['stdError'],
+                $mainStdOutput->getErrorOutput()->output,
+                'StdOutput equals'
+            );
+        }
+
+        if (isset($expected['resultData'])) {
+            $this->tester->assertEquals(
+                $expected['resultData'],
+                $result->getData(),
+                'Result data equals'
             );
         }
     }
