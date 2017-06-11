@@ -2,23 +2,28 @@
 
 namespace Cheppers\Robo\Drush\Tests\Acceptance\Task;
 
-use \AcceptanceTester;
+use Cheppers\Robo\Drush\Test\AcceptanceTester;
 
 class DrushTaskCest
 {
-    protected $drushVersion = '8.1.10';
+    protected $drushVersion = '8.1.12';
 
     public function drushVersion(AcceptanceTester $i)
     {
-        $i->runRoboTask('version');
-        $i->expectTheExitCodeToBe(0);
-        $i->seeThisTextInTheStdOutput("Drush Version   :  {$this->drushVersion}");
+        $id = 'version';
+        $i->runRoboTask($id, \DrushRoboFile::class, 'version');
+        $i->assertEquals(0, $i->getRoboTaskExitCode($id));
+        $i->assertContains(
+            "Drush Version   :  {$this->drushVersion}",
+            $i->getRoboTaskStdOutput($id)
+        );
     }
 
     public function drushVersionYaml(AcceptanceTester $i)
     {
-        $i->runRoboTask('version', [], ['yaml']);
-        $i->expectTheExitCodeToBe(0);
-        $i->seeThisTextInTheStdOutput($this->drushVersion);
+        $id = 'version yaml';
+        $i->runRoboTask($id, \DrushRoboFile::class, 'version', 'yaml');
+        $i->assertEquals(0, $i->getRoboTaskExitCode($id));
+        $i->assertContains($this->drushVersion, $i->getRoboTaskStdOutput($id));
     }
 }

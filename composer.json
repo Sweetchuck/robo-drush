@@ -28,17 +28,21 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Cheppers\\Robo\\Drush\\Composer\\": "src-dev/Composer/",
+            "Cheppers\\Robo\\Drush\\Test\\Helper\\": "tests/_support/Helper/",
             "Cheppers\\Robo\\Drush\\Tests\\Unit\\": "tests/unit/",
             "Cheppers\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/"
-        }
+        },
+        "classmap": [
+            "tests/_data/DrushRoboFile.php"
+        ]
     },
     "scripts": {
         "post-install-cmd": [
-            "@deploy-git-hooks"
+            "\\Cheppers\\Robo\\Drush\\Composer\\Scripts::postInstallCmd"
         ],
         "post-update-cmd": [
-            "@deploy-git-hooks"
-        ],
-        "deploy-git-hooks": "\\Cheppers\\GitHooks\\Main::deploy"
+            "\\Cheppers\\Robo\\Drush\\Composer\\Scripts::postUpdateCmd"
+        ]
     }
 }

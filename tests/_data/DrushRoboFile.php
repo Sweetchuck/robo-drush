@@ -1,7 +1,7 @@
 <?php
 
 // @codingStandardsIgnoreStart
-class RoboFile extends \Robo\Tasks
+class DrushRoboFile extends \Robo\Tasks
 {
     // @codingStandardsIgnoreEnd
 
@@ -11,6 +11,7 @@ class RoboFile extends \Robo\Tasks
     {
         return $this
             ->taskDrush('core-status')
+            ->setOutput($this->output())
             ->setCmdOption('format', $format);
     }
 
@@ -18,6 +19,7 @@ class RoboFile extends \Robo\Tasks
     {
         return $this
             ->taskDrush('')
+            ->setOutput($this->output())
             ->setCmdOption('version', true)
             ->setCmdOption('format', $format);
     }

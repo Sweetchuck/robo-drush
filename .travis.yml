@@ -28,8 +28,9 @@ install:
     - 'composer install'
 
 script:
-    - './bin/robo --ansi lint'
-    - './bin/robo --ansi test'
+    - 'composer validate'
+    - 'bin/robo lint --skip-composer-lock'
+    - 'bin/robo test'
 
 after_success:
     - 'bash <(curl -s https://codecov.io/bash)'
