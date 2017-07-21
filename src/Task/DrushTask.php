@@ -113,6 +113,28 @@ class DrushTask extends \Robo\Task\BaseTask implements
     }
     //endregion
 
+    // region Option - processTimeout.
+    /**
+     * @var int|null
+     */
+    protected $processTimeout = null;
+
+    public function getProcessTimeout(): ?int
+    {
+        return $this->processTimeout;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setProcessTimeout(?int $value)
+    {
+        $this->processTimeout = $value;
+
+        return $this;
+    }
+    // endregion
+
     // region Option - globalOptions.
     /**
      * @var array
@@ -371,7 +393,13 @@ class DrushTask extends \Robo\Task\BaseTask implements
             ]
         );
         /** @var \Symfony\Component\Process\Process $process */
-        $process = new $this->processClass($command);
+        $process = new $this->processClass(
+            $command,
+            null,
+            null,
+            null,
+            $this->getProcessTimeout()
+        );
 
         $exitCode = $process->run();
         if ($exitCode === 0) {
