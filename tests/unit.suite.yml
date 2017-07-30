@@ -1,6 +1,6 @@
 
-class_name: UnitTester
+class_name: 'UnitTester'
 modules:
     enabled:
-        - Asserts
-        - \Sweetchuck\Robo\Drush\Test\Helper\Unit
+        - 'Asserts'
+        - '\Sweetchuck\Robo\Drush\Test\Helper\Unit'

@@ -2,8 +2,6 @@
 
 namespace Sweetchuck\Robo\Drush\Task;
 
-use Sweetchuck\AssetJar\AssetJarAware;
-use Sweetchuck\AssetJar\AssetJarAwareInterface;
 use Sweetchuck\Robo\Drush\CmdOptionHandlerInterface;
 use Sweetchuck\Robo\Drush\StdOutputParser\Base as StdOutputParserBase;
 use Sweetchuck\Robo\Drush\StdOutputParser\PmList as StdOutputParserPmList;
@@ -20,12 +18,10 @@ use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Process\Process;
 
 class DrushTask extends \Robo\Task\BaseTask implements
-    AssetJarAwareInterface,
     CommandInterface,
     InputAwareInterface,
     OutputAwareInterface
 {
-    use AssetJarAware;
     use IO;
 
     public static $globalOptions = [
@@ -50,6 +46,29 @@ class DrushTask extends \Robo\Task\BaseTask implements
     ];
 
     //region Options
+
+    // region Option - assetNamePrefix.
+    /**
+     * @var string
+     */
+    protected $assetNamePrefix = '';
+
+    public function getAssetNamePrefix(): string
+    {
+        return $this->assetNamePrefix;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAssetNamePrefix(string $value)
+    {
+        $this->assetNamePrefix = $value;
+
+        return $this;
+    }
+    // endregion
+
     //region Option - workingDirectory.
     /**
      * @var string
@@ -287,12 +306,8 @@ class DrushTask extends \Robo\Task\BaseTask implements
     {
         foreach ($config as $key => $value) {
             switch ($key) {
-                case 'assetJar':
-                    $this->setAssetJar($value);
-                    break;
-
-                case 'assetJarMapping':
-                    $this->setAssetJarMapping($value);
+                case 'assetNamePrefix':
+                    $this->setAssetNamePrefix($value);
                     break;
 
                 case 'workingDirectory':
@@ -405,11 +420,9 @@ class DrushTask extends \Robo\Task\BaseTask implements
         if ($exitCode === 0) {
             $stdOutput = $process->getOutput();
             $this->output()->write($stdOutput);
-            $this
-                ->runParseStdOutput($stdOutput)
-                ->runReleaseAssets();
+            $this->runParseStdOutput($stdOutput);
 
-            return Result::success($this, $stdOutput, $this->assets);
+            return Result::success($this, $stdOutput, $this->getAssetsWithPrefixedNames());
         }
 
         return Result::error($this, $process->getErrorOutput());
@@ -442,20 +455,19 @@ class DrushTask extends \Robo\Task\BaseTask implements
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function runReleaseAssets()
+    protected function getAssetsWithPrefixedNames(): array
     {
-        if ($this->hasAssetJar()) {
-            foreach ($this->assets as $name => $value) {
-                if ($this->getAssetJarMap($name)) {
-                    $this->setAssetJarValue($name, $value);
-                }
-            }
+        $prefix = $this->getAssetNamePrefix();
+        if (!$prefix) {
+            return $this->assets;
         }
 
-        return $this;
+        $data = [];
+        foreach ($this->assets as $key => $value) {
+            $data["{$prefix}{$key}"] = $value;
+        }
+
+        return $data;
     }
 
     /**
