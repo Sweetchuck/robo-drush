@@ -1,11 +1,11 @@
 <?php
 
-namespace Cheppers\Robo\Drush;
+namespace Sweetchuck\Robo\Drush;
 
 trait DrushTaskLoader
 {
     /**
-     * @return \Cheppers\Robo\Drush\Task\DrushTask|\Robo\Collection\CollectionBuilder
+     * @return \Sweetchuck\Robo\Drush\Task\DrushTask|\Robo\Collection\CollectionBuilder
      */
     protected function taskDrush($config, array $globalOptions = [], array $arguments = [], array $options = [])
     {

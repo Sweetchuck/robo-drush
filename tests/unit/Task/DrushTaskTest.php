@@ -1,11 +1,11 @@
 <?php
 
-namespace Cheppers\Robo\Drush\Tests\Unit\Task;
+namespace Sweetchuck\Robo\Drush\Tests\Unit\Task;
 
-use Cheppers\AssetJar\AssetJar;
-use Cheppers\Robo\Drush\Task\DrushTask;
-use Cheppers\Robo\Drush\Test\Helper\Dummy\Output as DummyOutput;
-use Cheppers\Robo\Drush\Test\Helper\Dummy\Process as DummyProcess;
+use Sweetchuck\AssetJar\AssetJar;
+use Sweetchuck\Robo\Drush\Task\DrushTask;
+use Sweetchuck\Robo\Drush\Test\Helper\Dummy\Output as DummyOutput;
+use Sweetchuck\Robo\Drush\Test\Helper\Dummy\Process as DummyProcess;
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use Robo\Robo;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DrushTaskTest extends Unit
 {
     /**
-     * @var \Cheppers\Robo\Drush\Test\UnitTester
+     * @var \Sweetchuck\Robo\Drush\Test\UnitTester
      */
     protected $tester;
 
@@ -306,7 +306,7 @@ class DrushTaskTest extends Unit
             'assetJarMapping' => ['result' => ['drush', 'result']],
         ];
 
-        /** @var \Cheppers\Robo\Drush\Task\DrushTask $task */
+        /** @var \Sweetchuck\Robo\Drush\Task\DrushTask $task */
         $task = Stub::construct(
             DrushTask::class,
             [$config, $globalOptions, $arguments, $options],
@@ -381,7 +381,7 @@ class DrushTaskTest extends Unit
         ];
         $mainStdOutput = new DummyOutput($outputConfig);
 
-         /** @var \Cheppers\Robo\Drush\Task\DrushTask $task */
+         /** @var \Sweetchuck\Robo\Drush\Task\DrushTask $task */
         $task = Stub::construct(
             DrushTask::class,
             [[], [], [], []],

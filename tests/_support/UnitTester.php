@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\Robo\Drush\Test;
+namespace Sweetchuck\Robo\Drush\Test;
 
 /**
  * Inherited Methods

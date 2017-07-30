@@ -1,5 +1,5 @@
 
-namespace: 'Cheppers\Robo\Drush\Test'
+namespace: 'Sweetchuck\Robo\Drush\Test'
 
 actor: 'Tester'
 

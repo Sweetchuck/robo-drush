@@ -1,37 +1,38 @@
 {
-    "name": "cheppers/robo-drush",
+    "name": "sweetchuck/robo-drush",
     "description": "Drush related Robo tasks",
     "license": "GPL-2.0+",
     "config": {
         "bin-dir": "bin",
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=7.1",
-        "cheppers/asset-jar": "^0.0",
+        "sweetchuck/asset-jar": "^0.0",
         "consolidation/robo": "^1.0",
         "drush/drush": "^8.1",
         "symfony/yaml": "^2.8||^3.1"
     },
     "require-dev": {
-        "cheppers/git-hooks": "^0.0",
-        "cheppers/robo-git": "^0.0",
-        "cheppers/robo-phpcs": "^0.0",
+        "sweetchuck/git-hooks": "^0.0",
+        "sweetchuck/robo-git": "^0.0",
+        "sweetchuck/robo-phpcs": "^0.0",
         "codeception/codeception": "^2.2"
     },
     "autoload": {
         "psr-4": {
-            "Cheppers\\Robo\\Drush\\": "src/"
+            "Sweetchuck\\Robo\\Drush\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Cheppers\\Robo\\Drush\\Composer\\": "src-dev/Composer/",
-            "Cheppers\\Robo\\Drush\\Test\\Helper\\": "tests/_support/Helper/",
-            "Cheppers\\Robo\\Drush\\Tests\\Unit\\": "tests/unit/",
-            "Cheppers\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/"
+            "Sweetchuck\\Robo\\Drush\\Composer\\": "src-dev/Composer/",
+            "Sweetchuck\\Robo\\Drush\\Test\\Helper\\": "tests/_support/Helper/",
+            "Sweetchuck\\Robo\\Drush\\Tests\\Unit\\": "tests/unit/",
+            "Sweetchuck\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/"
         },
         "classmap": [
             "tests/_data/DrushRoboFile.php"
@@ -39,10 +40,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "\\Cheppers\\Robo\\Drush\\Composer\\Scripts::postInstallCmd"
+            "\\Sweetchuck\\Robo\\Drush\\Composer\\Scripts::postInstallCmd"
         ],
         "post-update-cmd": [
-            "\\Cheppers\\Robo\\Drush\\Composer\\Scripts::postUpdateCmd"
+            "\\Sweetchuck\\Robo\\Drush\\Composer\\Scripts::postUpdateCmd"
         ]
     }
 }
