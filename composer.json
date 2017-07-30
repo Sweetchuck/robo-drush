@@ -16,10 +16,11 @@
         "symfony/yaml": "^2.8||^3.1"
     },
     "require-dev": {
+        "codeception/codeception": "^2.2",
+        "sweetchuck/codeception-module-robo-task-runner": "^0.0.1",
         "sweetchuck/git-hooks": "^0.0",
         "sweetchuck/robo-git": "^0.0",
-        "sweetchuck/robo-phpcs": "^0.0",
-        "codeception/codeception": "^2.2"
+        "sweetchuck/robo-phpcs": "^0.0"
     },
     "autoload": {
         "psr-4": {

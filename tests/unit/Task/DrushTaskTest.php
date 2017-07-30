@@ -2,9 +2,8 @@
 
 namespace Sweetchuck\Robo\Drush\Tests\Unit\Task;
 
-use Sweetchuck\AssetJar\AssetJar;
 use Sweetchuck\Robo\Drush\Task\DrushTask;
-use Sweetchuck\Robo\Drush\Test\Helper\Dummy\Output as DummyOutput;
+use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyOutput;
 use Sweetchuck\Robo\Drush\Test\Helper\Dummy\Process as DummyProcess;
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;

@@ -21,7 +21,7 @@ class DrushTaskCest
 
     public function drushVersionYaml(AcceptanceTester $i): void
     {
-        $id = 'version yaml';
+        $id = 'version:yaml';
         $i->runRoboTask($id, \DrushRoboFile::class, 'version', 'yaml');
         $i->assertEquals(0, $i->getRoboTaskExitCode($id));
         $i->assertContains($this->drushVersion, $i->getRoboTaskStdOutput($id));
@@ -29,7 +29,7 @@ class DrushTaskCest
 
     public function drushCoreExecute(AcceptanceTester $i): void
     {
-        $id = '';
+        $id = 'core:execute:process-timeout';
         $i->wantToTest('Process timeout');
         $i->runRoboTask($id, \DrushRoboFile::class, 'core:execute', '--process-timeout=1', 'sleep', '3');
         $i->assertEquals(1, $i->getRoboTaskExitCode($id));
