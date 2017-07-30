@@ -1,9 +1,9 @@
 <?php
 
-namespace Cheppers\Robo\Drush\StdOutputParser;
+namespace Sweetchuck\Robo\Drush\StdOutputParser;
 
-use Cheppers\Robo\Drush\StdOutputParserInterface;
-use Cheppers\Robo\Drush\Task\DrushTask;
+use Sweetchuck\Robo\Drush\StdOutputParserInterface;
+use Sweetchuck\Robo\Drush\Task\DrushTask;
 use Symfony\Component\Yaml\Yaml;
 
 class Base implements StdoutputParserInterface

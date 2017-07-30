@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\Robo\Drush;
+namespace Sweetchuck\Robo\Drush;
 
-use Cheppers\Robo\Drush\Task\DrushTask;
+use Sweetchuck\Robo\Drush\Task\DrushTask;
 
 interface StdOutputParserInterface
 {

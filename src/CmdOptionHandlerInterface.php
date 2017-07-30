@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\Robo\Drush;
+namespace Sweetchuck\Robo\Drush;
 
 interface CmdOptionHandlerInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\Robo\Drush\Tests\Acceptance\Task;
+namespace Sweetchuck\Robo\Drush\Tests\Acceptance\Task;
 
-use Cheppers\Robo\Drush\Test\AcceptanceTester;
+use Sweetchuck\Robo\Drush\Test\AcceptanceTester;
 
 class DrushTaskCest
 {

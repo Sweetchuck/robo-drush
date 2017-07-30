@@ -1,21 +1,21 @@
 <?php
 
-namespace Cheppers\Robo\Drush\Tests\Unit;
+namespace Sweetchuck\Robo\Drush\Tests\Unit;
 
-use Cheppers\Robo\Drush\Utils;
+use Sweetchuck\Robo\Drush\Utils;
 use Codeception\Test\Unit;
 
 /**
  * Class UtilsTest.
  *
- * @covers \Cheppers\Robo\Drush\Utils
+ * @covers \Sweetchuck\Robo\Drush\Utils
  *
- * @package Cheppers\Robo\Drush\Tests\Unit
+ * @package Sweetchuck\Robo\Drush\Tests\Unit
  */
 class UtilsTest extends Unit
 {
     /**
-     * @var \Cheppers\Robo\Drush\Test\UnitTester
+     * @var \Sweetchuck\Robo\Drush\Test\UnitTester
      */
     protected $tester;
 

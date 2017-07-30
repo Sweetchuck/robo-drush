@@ -7,7 +7,7 @@ class DrushRoboFile extends \Robo\Tasks
 {
     // @codingStandardsIgnoreEnd
 
-    use \Cheppers\Robo\Drush\DrushTaskLoader;
+    use \Sweetchuck\Robo\Drush\DrushTaskLoader;
 
     public function version(string $format = null): TaskInterface
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\Robo\Drush\CmdOptionHandler;
+namespace Sweetchuck\Robo\Drush\CmdOptionHandler;
 
-use Cheppers\Robo\Drush\CmdOptionHandlerInterface;
+use Sweetchuck\Robo\Drush\CmdOptionHandlerInterface;
 
 class Flag implements CmdOptionHandlerInterface
 {

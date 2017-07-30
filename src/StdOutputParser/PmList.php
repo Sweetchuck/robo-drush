@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\Robo\Drush\StdOutputParser;
+namespace Sweetchuck\Robo\Drush\StdOutputParser;
 
-use Cheppers\Robo\Drush\Task\DrushTask;
+use Sweetchuck\Robo\Drush\Task\DrushTask;
 
 class PmList extends Base
 {

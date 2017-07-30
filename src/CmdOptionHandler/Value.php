@@ -1,9 +1,9 @@
 <?php
 
-namespace Cheppers\Robo\Drush\CmdOptionHandler;
+namespace Sweetchuck\Robo\Drush\CmdOptionHandler;
 
-use Cheppers\Robo\Drush\CmdOptionHandlerInterface;
-use Cheppers\Robo\Drush\Utils;
+use Sweetchuck\Robo\Drush\CmdOptionHandlerInterface;
+use Sweetchuck\Robo\Drush\Utils;
 
 class Value implements CmdOptionHandlerInterface
 {
