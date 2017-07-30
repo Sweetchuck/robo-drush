@@ -27,7 +27,6 @@ install:
     - 'composer install --no-progress'
 
 script:
-    - 'composer validate'
     - 'bin/robo lint'
     - 'bin/robo test'
 

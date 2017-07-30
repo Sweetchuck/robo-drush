@@ -121,14 +121,14 @@ class DrushTaskTest extends Unit
         return [
             'drush --version' => [
                 'Drush Version   :  8.4.2',
-                ['result' => '8.4.2'],
-                ['assetJar' => new AssetJar()],
+                ['drush.version.result' => '8.4.2'],
+                ['assetNamePrefix' => 'drush.version.'],
                 ['version' => true],
             ],
             'drush --version --format=json' => [
                 json_encode('8.4.2'),
                 ['result' => '8.4.2'],
-                ['assetJar' => new AssetJar()],
+                [],
                 ['version' => true],
                 [],
                 ['format' => 'json'],
@@ -136,7 +136,7 @@ class DrushTaskTest extends Unit
             'drush --version --format=var_export' => [
                 '$variables["Drush Version"] = \'8.4.2\';',
                 ['result' => '8.4.2'],
-                ['assetJar' => new AssetJar()],
+                [],
                 ['version' => true],
                 [],
                 ['format' => 'var_export'],
@@ -144,7 +144,7 @@ class DrushTaskTest extends Unit
             'drush --version --format=string' => [
                 '8.4.2',
                 ['result' => '8.4.2'],
-                ['assetJar' => new AssetJar()],
+                [],
                 ['version' => true],
                 [],
                 ['format' => 'string'],
@@ -152,7 +152,7 @@ class DrushTaskTest extends Unit
             'drush --version --format=yaml' => [
                 '8.4.2',
                 ['result' => '8.4.2'],
-                ['assetJar' => new AssetJar()],
+                [],
                 ['version' => true],
                 [],
                 ['format' => 'yaml'],
@@ -206,7 +206,7 @@ class DrushTaskTest extends Unit
                         'machine_type' => 'module',
                     ],
                 ]],
-                ['cmdName' => 'pm-list', 'assetJar' => new AssetJar()],
+                ['cmdName' => 'pm-list'],
                 ['version' => true],
                 [],
                 ['format' => 'yaml'],
@@ -260,7 +260,7 @@ class DrushTaskTest extends Unit
                         'machine_type' => 'module',
                     ],
                 ]],
-                ['cmdName' => 'pm-list', 'assetJar' => new AssetJar()],
+                ['cmdName' => 'pm-list'],
                 ['version' => true],
                 [],
                 ['format' => 'json'],
@@ -274,7 +274,7 @@ class DrushTaskTest extends Unit
                         'foo' => ['bar' => 42],
                     ],
                 ],
-                ['cmdName' => 'unknown', 'assetJar' => new AssetJar()],
+                ['cmdName' => 'unknown'],
                 [],
                 [],
                 ['format' => 'json'],
@@ -301,10 +301,6 @@ class DrushTaskTest extends Unit
             'colors' => false,
         ];
         $mainStdOutput = new DummyOutput($outputConfig);
-
-        $config += [
-            'assetJarMapping' => ['result' => ['drush', 'result']],
-        ];
 
         /** @var \Sweetchuck\Robo\Drush\Task\DrushTask $task */
         $task = Stub::construct(
@@ -338,14 +334,6 @@ class DrushTaskTest extends Unit
             $result->getData(),
             'Result::data equals'
         );
-
-        if ($task->hasAssetJar()) {
-            $this->tester->assertEquals(
-                $expectedResultData['result'],
-                $task->getAssetJarValue('result'),
-                'AssetJar::result equals'
-            );
-        }
     }
 
     public function casesRunFail(): array
