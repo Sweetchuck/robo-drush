@@ -14,7 +14,7 @@ class DrushRoboFile extends \Robo\Tasks
         return $this
             ->taskDrush('')
             ->setOutput($this->output())
-            ->setCmdOption('version', true)
+            ->setCmdName('version')
             ->setCmdOption('format', $format);
     }
 

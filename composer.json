@@ -1,7 +1,7 @@
 {
     "name": "sweetchuck/robo-drush",
     "description": "Drush related Robo tasks",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "config": {
         "bin-dir": "bin",
         "sort-packages": true,
@@ -11,13 +11,13 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.1",
-        "consolidation/robo": "^1.0",
-        "drush/drush": "^8.1",
-        "symfony/yaml": "^2.8||^3.1"
+        "consolidation/robo": "^1.2",
+        "drush/drush": "^9.0",
+        "symfony/yaml": "^3.1 || ^4.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.2",
-        "sweetchuck/codeception-module-robo-task-runner": "^0.0.1",
+        "sweetchuck/codeception-module-robo-task-runner": "^0.0",
         "sweetchuck/git-hooks": "^0.0",
         "sweetchuck/robo-git": "^0.0",
         "sweetchuck/robo-phpcs": "^0.0"
