@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush\Tests\Acceptance\Task;
 
 use Sweetchuck\Robo\Drush\Test\AcceptanceTester;
+use Sweetchuck\Robo\Drush\Test\Helper\RoboFiles\DrushRoboFile;
 use Symfony\Component\Yaml\Yaml;
 
 class DrushTaskCest
@@ -10,28 +13,43 @@ class DrushTaskCest
     /**
      * @var string
      */
-    protected $drushVersion = '9.2.1';
+    protected $drushVersion = '10.2.1';
+
+    /**
+     * @var string
+     */
+    protected $drushExecutable = 'bin/drush';
 
     public function drushVersion(AcceptanceTester $tester): void
     {
         $id = 'version';
-        $tester->runRoboTask($id, \DrushRoboFile::class, 'version');
+
+        $taskOptions = [
+            'drushExecutable' => $this->drushExecutable,
+            'cmdName' => 'version',
+        ];
+        $tester->runRoboTask($id, DrushRoboFile::class, 'drush', json_encode($taskOptions));
 
         $exitCode = $tester->getRoboTaskExitCode($id);
         $stdOutput = $tester->getRoboTaskStdOutput($id);
         $stdError = $tester->getRoboTaskStdError($id);
 
-        $tester->assertEquals(0, $exitCode);
-        $tester->assertEquals(
+        $tester->assertSame(0, $exitCode, 'Exit code same');
+        $tester->assertSame(
             implode(PHP_EOL, [
                 " Drush version : {$this->drushVersion} ",
                 '',
             ]),
-            $stdOutput
+            $stdOutput,
+            'stdOutput same'
         );
         $tester->assertEquals(
             implode(PHP_EOL, [
-                " [Sweetchuck\Robo\Drush\Task\DrushTask] Drush command: bin/drush version",
+                " [Drush] bin/drush version",
+                "  RUN  'bin/drush' 'version'",
+                "  OUT   Drush version : {$this->drushVersion} ",
+                '  OUT  ',
+                '  RES  Command ran successfully',
                 '',
             ]),
             $stdError
@@ -41,36 +59,40 @@ class DrushTaskCest
     public function drushVersionYaml(AcceptanceTester $tester): void
     {
         $id = 'version:yaml';
-        $tester->runRoboTask($id, \DrushRoboFile::class, 'version', 'yaml');
+        $taskOptions = [
+            'drushExecutable' => $this->drushExecutable,
+            'cmdName' => 'version',
+            'cmdOptions' => [
+                'format' => 'yaml',
+            ],
+        ];
+        $tester->runRoboTask($id, DrushRoboFile::class, 'drush', json_encode($taskOptions));
 
         $exitCode = $tester->getRoboTaskExitCode($id);
         $stdOutput = $tester->getRoboTaskStdOutput($id);
         $stdError = $tester->getRoboTaskStdError($id);
 
-        $tester->assertEquals(0, $exitCode);
-        $tester->assertEquals(
+        $tester->assertSame(0, $exitCode, 'Exit code same');
+        $tester->assertSame(
             implode(PHP_EOL, [
-                " [Sweetchuck\Robo\Drush\Task\DrushTask] Drush command: bin/drush version --format='yaml'",
+                ' [Drush] bin/drush version --format=yaml',
+                "  RUN  'bin/drush' 'version' '--format=yaml'",
+                "  OUT  drush-version: {$this->drushVersion}",
+                '  OUT  ',
+                '  OUT  ',
+                '  RES  Command ran successfully',
                 '',
             ]),
-            $stdError
+            $stdError,
+            'stdError same'
         );
 
-        $tester->assertEquals(
+        $tester->assertSame(
             [
                 'drush-version' => $this->drushVersion
             ],
-            Yaml::parse($stdOutput)
+            Yaml::parse($stdOutput),
+            'stdOutput same'
         );
-    }
-
-    public function drushCoreExecute(AcceptanceTester $i): void
-    {
-        $id = 'core:execute:process-timeout';
-        $i->wantToTest('Process timeout');
-        $i->runRoboTask($id, \DrushRoboFile::class, 'core:execute', '--process-timeout=1', 'sleep', '3');
-        $i->assertEquals(1, $i->getRoboTaskExitCode($id));
-        $i->assertEquals('', $i->getRoboTaskStdOutput($id));
-        $i->assertContains('exceeded the timeout of 1 seconds', $i->getRoboTaskStdError($id));
     }
 }

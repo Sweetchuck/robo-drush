@@ -1,18 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush\CmdOptionHandler;
 
-use Sweetchuck\Robo\Drush\CmdOptionHandlerInterface;
-
-class Flag implements CmdOptionHandlerInterface
+class Flag extends Base
 {
     /**
      * {@inheritdoc}
      */
-    public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs): void
+    public static function getCommand(array $option, $value): array
     {
-        if ($value === true) {
-            $cmdPattern .= " {$option['name']}";
-        }
+        return $value === true ? [static::optionName($option['name'])] : [];
     }
 }

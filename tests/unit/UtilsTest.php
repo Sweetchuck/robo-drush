@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush\Tests\Unit;
 
 use Sweetchuck\Robo\Drush\Utils;
@@ -41,32 +43,24 @@ class UtilsTest extends Unit
     }
 
     /**
-     * @dataProvider casesFilterDisabled
-     */
-    public function testFilterDisabled(array $expected, array $items)
-    {
-        $this->tester->assertEquals($expected, Utils::filterDisabled($items));
-    }
-
-    /**
      * @return array
      */
-    public function casesIsValidMachineName()
+    public function casesIsValidCommandName()
     {
         return [
             'empty' => [false, ''],
             'space' => [false, ' '],
             'space inner' => [false, 'a a'],
             'invalid char' => [false, 'a!b'],
-            'good' => [true, 'a_b-c'],
+            'good' => [true, 'a_b-c:d'],
         ];
     }
 
     /**
-     * @dataProvider casesIsValidMachineName
+     * @dataProvider casesIsValidCommandName
      */
-    public function testIsValidMachineName($expected, $name)
+    public function testIsValidCommandName(bool $expected, string $name)
     {
-        $this->tester->assertEquals($expected, Utils::isValidMachineName($name));
+        $this->tester->assertEquals($expected, Utils::isValidCommandName($name));
     }
 }
