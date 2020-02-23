@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\Drush\OutputParser;
 
-class PmList extends Base
+class PmListOutputParser extends DefaultOutputParser
 {
     /**
      * @inheritdoc

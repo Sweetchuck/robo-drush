@@ -6,7 +6,7 @@ namespace Sweetchuck\Robo\Drush\OutputParser;
 
 use Symfony\Component\Yaml\Yaml;
 
-class Version extends Base
+class VersionOutputParser extends DefaultOutputParser
 {
     /**
      * @inheritdoc
@@ -20,15 +20,6 @@ class Version extends Base
         $hasAsset = false;
         $asset = null;
         switch ($format) {
-            case null:
-            case '':
-            case 'key-value':
-                $parts = explode(':', $this->stdOutput, 2);
-                if (isset($parts[1])) {
-                    $hasAsset = true;
-                    $asset = trim($parts[1]);
-                }
-                break;
             case 'json':
                 $hasAsset = true;
                 $asset = json_decode($this->stdOutput, true);
@@ -42,6 +33,7 @@ class Version extends Base
                 break;
 
             case 'var_export':
+                $hasAsset = true;
                 $parts = explode('=>', $this->stdOutput, 2);
                 if (isset($parts[1])) {
                     $hasAsset = true;
@@ -49,6 +41,7 @@ class Version extends Base
                 }
                 break;
 
+            case '':
             case 'string':
                 $hasAsset = true;
                 $asset = trim($this->stdOutput);

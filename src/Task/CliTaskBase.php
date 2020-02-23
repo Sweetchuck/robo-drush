@@ -15,9 +15,9 @@ use Robo\Task\BaseTask;
 use Robo\TaskInfo;
 use Sweetchuck\Robo\Drush\CmdOptionHandler\Flag as CmdOptionHandlerFlag;
 use Sweetchuck\Robo\Drush\CmdOptionHandler\Value as CmdOptionHandlerValue;
-use Sweetchuck\Robo\Drush\OutputParser\Base as BaseOutputParser;
-use Sweetchuck\Robo\Drush\OutputParser\PmList as PmListParser;
-use Sweetchuck\Robo\Drush\OutputParser\Version as VersionParser;
+use Sweetchuck\Robo\Drush\OutputParser\DefaultOutputParser;
+use Sweetchuck\Robo\Drush\OutputParser\PmListOutputParser;
+use Sweetchuck\Robo\Drush\OutputParser\VersionOutputParser;
 use Sweetchuck\Robo\Drush\Utils;
 use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
 use Symfony\Component\Console\Helper\ProcessHelper;
@@ -52,10 +52,10 @@ abstract class CliTaskBase extends BaseTask implements
 
         // Command specific options.
         'pm:list' => [
-            'outputParser' => PmListParser::class,
+            'outputParser' => PmListOutputParser::class,
         ],
         'version' => [
-            'outputParser' => VersionParser::class,
+            'outputParser' => VersionOutputParser::class,
         ],
     ];
 
@@ -618,7 +618,7 @@ abstract class CliTaskBase extends BaseTask implements
     protected function runPrepareAssets()
     {
         $action = $this->getCmdName();
-        $outputParserClass = static::$commands[$action]['outputParser'] ?? BaseOutputParser::class;
+        $outputParserClass = static::$commands[$action]['outputParser'] ?? DefaultOutputParser::class;
         /** @var \Sweetchuck\Robo\Drush\OutputParserInterface $outputParser */
         $outputParser = new $outputParserClass();
         $result = $outputParser->parse(

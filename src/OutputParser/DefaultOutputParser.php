@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\Drush\OutputParser;
 
+use Robo\Collection\CollectionBuilder;
 use Sweetchuck\Robo\Drush\OutputParserInterface;
-use Sweetchuck\Robo\Drush\Task\CliTaskBase;
 use Symfony\Component\Yaml\Yaml;
 
-class Base implements OutputParserInterface
+class DefaultOutputParser implements OutputParserInterface
 {
     /**
      * @var \Sweetchuck\Robo\Drush\Task\DrushTask
@@ -44,7 +44,7 @@ class Base implements OutputParserInterface
      * {@inheritdoc}
      */
     public function parse(
-        CliTaskBase $task,
+        $task,
         int $exitCode,
         string $stdOutput,
         string $stdError

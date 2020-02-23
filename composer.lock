@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd657417a7aa4b2dedabfb4d5c9f1366",
+    "content-hash": "bde6db726944aad8b6c9f6788be9fa06",
     "packages": [
         {
             "name": "chi-teck/drupal-code-generator",
@@ -4335,6 +4335,51 @@
                 "standards"
             ],
             "time": "2020-01-30T22:20:29+00:00"
+        },
+        {
+            "name": "stecman/symfony-console-completion",
+            "version": "0.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stecman/symfony-console-completion.git",
+                "reference": "a9502dab59405e275a9f264536c4e1cb61fc3518"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stecman/symfony-console-completion/zipball/a9502dab59405e275a9f264536c4e1cb61fc3518",
+                "reference": "a9502dab59405e275a9f264536c4e1cb61fc3518",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/console": "~2.3 || ~3.0 || ~4.0 || ~5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8.36 || ~5.7 || ~6.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.10.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stecman\\Component\\Symfony\\Console\\BashCompletion\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stephen Holdaway",
+                    "email": "stephen@stecman.co.nz"
+                }
+            ],
+            "description": "Automatic BASH completion for Symfony Console Component based applications.",
+            "time": "2019-11-24T17:03:06+00:00"
         },
         {
             "name": "sweetchuck/codeception-module-robo-task-runner",
