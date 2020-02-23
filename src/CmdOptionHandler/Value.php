@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush\CmdOptionHandler;
 
-use Sweetchuck\Robo\Drush\CmdOptionHandlerInterface;
-use Sweetchuck\Robo\Drush\Utils;
+use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
 
-class Value implements CmdOptionHandlerInterface
+class Value extends Base
 {
     /**
      * {@inheritdoc}
      */
-    public static function getCommand(array $option, $value, string &$cmdPattern, array &$cmdArgs): void
+    public static function getCommand(array $option, $value): array
     {
         $defaultOption = [
             'settings' => [
@@ -19,16 +20,22 @@ class Value implements CmdOptionHandlerInterface
         ];
         $option = array_replace_recursive($defaultOption, $option);
 
-        $items = null;
-
-        if ($value || $value === '') {
-            $items = is_array($value) ? Utils::filterDisabled($value) : [$value];
+        $items = [];
+        if (is_array($value)) {
+            $items = array_filter($value, new ArrayFilterEnabled());
+        } elseif ($value !== false && $value !== null) {
+            $items = [$value];
         }
 
+        $cmd = [];
         if ($items) {
-            $cliValue = implode($option['settings']['separator'], $items);
-            $cmdPattern .= " {$option['name']}=%s";
-            $cmdArgs[] = escapeshellarg($cliValue);
+            $cmd[] = sprintf(
+                '%s=%s',
+                static::optionName($option['name']),
+                implode($option['settings']['separator'], $items)
+            );
         }
+
+        return $cmd;
     }
 }

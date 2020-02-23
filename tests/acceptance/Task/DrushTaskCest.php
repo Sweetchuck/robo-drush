@@ -1,39 +1,98 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush\Tests\Acceptance\Task;
 
 use Sweetchuck\Robo\Drush\Test\AcceptanceTester;
+use Sweetchuck\Robo\Drush\Test\Helper\RoboFiles\DrushRoboFile;
+use Symfony\Component\Yaml\Yaml;
 
 class DrushTaskCest
 {
-    protected $drushVersion = '8.1.12';
+    /**
+     * @var string
+     */
+    protected $drushVersion = '10.2.1';
 
-    public function drushVersion(AcceptanceTester $i): void
+    /**
+     * @var string
+     */
+    protected $drushExecutable = 'bin/drush';
+
+    public function drushVersion(AcceptanceTester $tester): void
     {
         $id = 'version';
-        $i->runRoboTask($id, \DrushRoboFile::class, 'version');
-        $i->assertEquals(0, $i->getRoboTaskExitCode($id));
-        $i->assertContains(
-            "Drush Version   :  {$this->drushVersion}",
-            $i->getRoboTaskStdOutput($id)
+
+        $taskOptions = [
+            'drushExecutable' => $this->drushExecutable,
+            'cmdName' => 'version',
+        ];
+        $tester->runRoboTask($id, DrushRoboFile::class, 'drush', json_encode($taskOptions));
+
+        $exitCode = $tester->getRoboTaskExitCode($id);
+        $stdOutput = $tester->getRoboTaskStdOutput($id);
+        $stdError = $tester->getRoboTaskStdError($id);
+
+        $tester->assertSame(0, $exitCode, 'Exit code same');
+        $tester->assertSame(
+            implode(PHP_EOL, [
+                " Drush version : {$this->drushVersion} ",
+                '',
+            ]),
+            $stdOutput,
+            'stdOutput same'
+        );
+        $tester->assertEquals(
+            implode(PHP_EOL, [
+                " [Drush] bin/drush version",
+                "  RUN  'bin/drush' 'version'",
+                "  OUT   Drush version : {$this->drushVersion} ",
+                '  OUT  ',
+                '  RES  Command ran successfully',
+                '',
+            ]),
+            $stdError
         );
     }
 
-    public function drushVersionYaml(AcceptanceTester $i): void
+    public function drushVersionYaml(AcceptanceTester $tester): void
     {
         $id = 'version:yaml';
-        $i->runRoboTask($id, \DrushRoboFile::class, 'version', 'yaml');
-        $i->assertEquals(0, $i->getRoboTaskExitCode($id));
-        $i->assertContains($this->drushVersion, $i->getRoboTaskStdOutput($id));
-    }
+        $taskOptions = [
+            'drushExecutable' => $this->drushExecutable,
+            'cmdName' => 'version',
+            'cmdOptions' => [
+                'format' => 'yaml',
+            ],
+        ];
+        $tester->runRoboTask($id, DrushRoboFile::class, 'drush', json_encode($taskOptions));
 
-    public function drushCoreExecute(AcceptanceTester $i): void
-    {
-        $id = 'core:execute:process-timeout';
-        $i->wantToTest('Process timeout');
-        $i->runRoboTask($id, \DrushRoboFile::class, 'core:execute', '--process-timeout=1', 'sleep', '3');
-        $i->assertEquals(1, $i->getRoboTaskExitCode($id));
-        $i->assertEquals('', $i->getRoboTaskStdOutput($id));
-        $i->assertContains('exceeded the timeout of 1 seconds', $i->getRoboTaskStdError($id));
+        $exitCode = $tester->getRoboTaskExitCode($id);
+        $stdOutput = $tester->getRoboTaskStdOutput($id);
+        $stdError = $tester->getRoboTaskStdError($id);
+
+        $tester->assertSame(0, $exitCode, 'Exit code same');
+        $tester->assertSame(
+            implode(PHP_EOL, [
+                ' [Drush] bin/drush version --format=yaml',
+                "  RUN  'bin/drush' 'version' '--format=yaml'",
+                "  OUT  drush-version: {$this->drushVersion}",
+                '  OUT  ',
+                '  OUT  ',
+                '  RES  Command ran successfully',
+                '',
+            ]),
+            $stdError,
+            'stdError same'
+        );
+
+        $tester->assertSame(
+            [
+                'drush-version' => $this->drushVersion
+            ],
+            Yaml::parse($stdOutput),
+            'stdOutput same'
+        );
     }
 }

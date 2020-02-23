@@ -1,16 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\Drush;
 
 class Utils
 {
-    public static function filterDisabled(array $items): array
+    public static function isValidCommandName(string $name): bool
     {
-        return gettype(reset($items)) === 'boolean' ? array_keys($items, true, true) : $items;
-    }
-
-    public static function isValidMachineName(string $name): bool
-    {
-        return preg_match('/^[a-z0-9_-]+$/ui', $name);
+        return (bool) preg_match('/^[a-z0-9:_-]+$/ui', $name);
     }
 }
