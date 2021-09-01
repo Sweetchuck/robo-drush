@@ -10,15 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class DrushTaskCest
 {
-    /**
-     * @var string
-     */
-    protected $drushVersion = '10.2.1';
+    protected string $drushVersion = '10.6.0';
 
-    /**
-     * @var string
-     */
-    protected $drushExecutable = 'bin/drush';
+    protected string $drushExecutable = 'bin/drush';
 
     public function drushVersion(AcceptanceTester $tester): void
     {
