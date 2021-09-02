@@ -12,6 +12,11 @@ class DrushRoboFile extends Tasks
 {
     use DrushTaskLoader;
 
+    protected function output()
+    {
+        return $this->getContainer()->get('output');
+    }
+
     public function drush(string $taskOptions = null): TaskInterface
     {
         $taskOptions = $taskOptions === null ? [] : json_decode($taskOptions, true);

@@ -2,20 +2,20 @@
     "name": "sweetchuck/robo-drush",
     "description": "Drush related Robo tasks",
     "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "bin-dir": "bin",
         "sort-packages": true,
         "optimize-autoloader": true
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "consolidation/robo": "^2.0",
         "drush/drush": "^9.0 || ^10.0",
-        "sweetchuck/utils": "^0.1.0",
-        "symfony/yaml": "^3.1 || ^4.0"
+        "sweetchuck/utils": "1.x-dev",
+        "symfony/yaml": "^4.0 || ^5.0"
     },
     "require-dev": {
         "codeception/codeception": "^4.0",
@@ -23,13 +23,13 @@
         "codeception/module-filesystem": "^1.0",
         "squizlabs/php_codesniffer": "^3.5",
         "stecman/symfony-console-completion": "^0.11.0",
-        "sweetchuck/codeception-module-robo-task-runner": "^0.7",
-        "sweetchuck/git-hooks": "^0.0",
-        "sweetchuck/lint-report": "^0.0",
-        "sweetchuck/robo-git": "^0.2",
-        "sweetchuck/robo-phpcs": "^0.1",
+        "sweetchuck/codeception-module-robo-task-runner": "1.x-dev",
+        "sweetchuck/git-hooks": "2.x-dev",
+        "sweetchuck/lint-report": "1.x-dev",
+        "sweetchuck/robo-git": "1.x-dev",
+        "sweetchuck/robo-phpcs": "1.x-dev",
         "symfony/error-handler": "^5.0",
-        "symfony/yaml": "^4.0",
+        "symfony/yaml": "^4.0 || ^5.0",
         "webmozart/path-util": "^2.3"
     },
     "autoload": {
@@ -45,12 +45,7 @@
             "Sweetchuck\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/"
         }
     },
-    "scripts": {
-        "post-install-cmd": [
-            "\\Sweetchuck\\Robo\\Drush\\Composer\\Scripts::postInstallCmd"
-        ],
-        "post-update-cmd": [
-            "\\Sweetchuck\\Robo\\Drush\\Composer\\Scripts::postUpdateCmd"
-        ]
-    }
+    "scripts": {},
+    "scripts-descriptions": {},
+    "extra": {}
 }
