@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\Drush\Test\Helper\RoboFiles;
+namespace Sweetchuck\Robo\Drush\Tests\Helper\RoboFiles;
 
 use Robo\Contract\TaskInterface;
 use Robo\Tasks;
@@ -14,7 +14,9 @@ class DrushRoboFile extends Tasks
 
     protected function output()
     {
-        return $this->getContainer()->get('output');
+        return $this
+            ->getContainer()
+            ->get('output');
     }
 
     public function drush(string $taskOptions = null): TaskInterface

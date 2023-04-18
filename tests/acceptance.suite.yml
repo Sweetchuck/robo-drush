@@ -4,5 +4,5 @@ modules:
     enabled:
         - 'Asserts'
         - 'Filesystem'
-        - '\Sweetchuck\Robo\Drush\Test\Helper\Acceptance'
+        - '\Sweetchuck\Robo\Drush\Tests\Helper\Acceptance'
         - '\Sweetchuck\Codeception\Module\RoboTaskRunner\RoboTaskRunner'

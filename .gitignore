@@ -1,8 +1,8 @@
 
-/bin/
 /vendor/
 
 /tests/_data/actual/
+/tests/_data/fixtures/project-01/
 /tests/_output/
 /tests/_support/_generated/
 

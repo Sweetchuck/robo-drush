@@ -3,4 +3,4 @@ class_name: 'UnitTester'
 modules:
     enabled:
         - 'Asserts'
-        - '\Sweetchuck\Robo\Drush\Test\Helper\Unit'
+        - '\Sweetchuck\Robo\Drush\Tests\Helper\Unit'

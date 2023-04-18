@@ -10,8 +10,8 @@ use Robo\Collection\CollectionBuilder;
 use Robo\Config\Config;
 use Robo\Robo;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
-use Sweetchuck\Robo\Drush\Test\Helper\Dummy\DummyProcessHelper;
-use Sweetchuck\Robo\Drush\Test\Helper\Dummy\DummyTaskBuilder;
+use Sweetchuck\Robo\Drush\Tests\Helper\Dummy\DummyProcessHelper;
+use Sweetchuck\Robo\Drush\Tests\Helper\Dummy\DummyTaskBuilder;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyOutput;
 use Symfony\Component\ErrorHandler\BufferingLogger;
@@ -34,7 +34,7 @@ abstract class TestBase extends Unit
     protected $builder;
 
     /**
-     * @var \Sweetchuck\Robo\Drush\Test\UnitTester
+     * @var \Sweetchuck\Robo\Drush\Tests\UnitTester
      */
     protected $tester;
 
@@ -44,7 +44,7 @@ abstract class TestBase extends Unit
     protected $task;
 
     /**
-     * @var \Sweetchuck\Robo\Drush\Test\Helper\Dummy\DummyTaskBuilder
+     * @var \Sweetchuck\Robo\Drush\Tests\Helper\Dummy\DummyTaskBuilder
      */
     protected $taskBuilder;
 

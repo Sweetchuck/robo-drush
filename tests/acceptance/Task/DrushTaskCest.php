@@ -4,15 +4,36 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\Drush\Tests\Acceptance\Task;
 
-use Sweetchuck\Robo\Drush\Test\AcceptanceTester;
-use Sweetchuck\Robo\Drush\Test\Helper\RoboFiles\DrushRoboFile;
+use Sweetchuck\Robo\Drush\Tests\AcceptanceTester;
+use Sweetchuck\Robo\Drush\Tests\Helper\RoboFiles\DrushRoboFile;
 use Symfony\Component\Yaml\Yaml;
 
 class DrushTaskCest
 {
-    protected string $drushVersion = '10.6.0';
+    protected string $drushVersion = '10.6.2';
 
-    protected string $drushExecutable = 'bin/drush';
+    protected string $drushExecutable = 'tests/_data/fixtures/project-01/vendor/bin/drush';
+
+    public function _before()
+    {
+        $projectDir = codecept_data_dir('fixtures/project-01');
+        if (!file_exists($projectDir)) {
+            mkdir($projectDir, 0777 - umask(), true);
+        }
+
+        if (!file_exists("$projectDir/composer.json")) {
+            file_put_contents(
+                "$projectDir/composer.json",
+                '{ "name": "sweetchuck/dummy-robo-drush-project-01" }',
+            );
+
+            exec(sprintf(
+                'cd %s && composer require %s',
+                escapeshellarg($projectDir),
+                escapeshellarg('drush/drush:^10.0'),
+            ));
+        }
+    }
 
     public function drushVersion(AcceptanceTester $tester): void
     {
@@ -31,22 +52,23 @@ class DrushTaskCest
         $tester->assertSame(0, $exitCode, 'Exit code same');
         $tester->assertSame(
             implode(PHP_EOL, [
-                " Drush version : {$this->drushVersion} ",
+                "Drush version : {$this->drushVersion} ",
                 '',
             ]),
             $stdOutput,
             'stdOutput same'
         );
-        $tester->assertEquals(
+
+        $tester->assertSame(
             implode(PHP_EOL, [
-                " [Drush] bin/drush version",
-                "  RUN  'bin/drush' 'version'",
-                "  OUT   Drush version : {$this->drushVersion} ",
+                " [Drush] {$this->drushExecutable} version",
+                "  RUN  '{$this->drushExecutable}' 'version'",
+                "  OUT  Drush version : {$this->drushVersion} ",
                 '  OUT  ',
                 '  RES  Command ran successfully',
                 '',
             ]),
-            $stdError
+            $stdError,
         );
     }
 
@@ -69,8 +91,8 @@ class DrushTaskCest
         $tester->assertSame(0, $exitCode, 'Exit code same');
         $tester->assertSame(
             implode(PHP_EOL, [
-                ' [Drush] bin/drush version --format=yaml',
-                "  RUN  'bin/drush' 'version' '--format=yaml'",
+                " [Drush] {$this->drushExecutable} version --format=yaml",
+                "  RUN  '{$this->drushExecutable}' 'version' '--format=yaml'",
                 "  OUT  drush-version: {$this->drushVersion}",
                 '  OUT  ',
                 '  OUT  ',

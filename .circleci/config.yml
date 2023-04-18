@@ -17,7 +17,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'circleci/php:7.4'
+                image: 'cimg/php:7.4'
 
     php_plus1:
         environment:
@@ -26,7 +26,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'circleci/php:8.0'
+                image: 'cimg/php:8.0'
 
 commands:
     composer_install:
@@ -59,7 +59,8 @@ commands:
             -
                 run:
                     name: 'Run linters'
-                    command: 'bin/robo lint'
+                    command: |
+                        "$(composer config bin-dir)/robo" lint
 
     test:
         description: 'Run tests'
@@ -67,7 +68,8 @@ commands:
             -
                 run:
                     name: 'Codeception - unit'
-                    command: 'bin/robo test unit'
+                    command: |
+                        "$(composer config bin-dir)/robo" test unit
             -
                 codecov/upload:
                     flags: 'unit'
@@ -75,7 +77,8 @@ commands:
             -
                 run:
                     name: 'Codeception - acceptance'
-                    command: 'bin/robo test acceptance'
+                    command: |
+                        "$(composer config bin-dir)/robo" test acceptance
             -
                 codecov/upload:
                     flags: 'acceptance'
@@ -88,27 +91,23 @@ commands:
 jobs:
     build:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
     lint:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'lint'
     test_php_min:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'test'
     test_php_plus1:
         executor: 'php_plus1'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'

@@ -5,7 +5,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "bin-dir": "bin",
+        "allow-plugins": {
+            "sweetchuck/git-hooks": true
+        },
         "sort-packages": true,
         "optimize-autoloader": true
     },
@@ -13,9 +15,8 @@
         "php": ">=7.4",
         "ext-json": "*",
         "consolidation/robo": "^2.0",
-        "drush/drush": "^9.0 || ^10.0",
         "sweetchuck/utils": "1.x-dev",
-        "symfony/yaml": "^4.0 || ^5.0"
+        "symfony/yaml": ">=2.0"
     },
     "require-dev": {
         "codeception/codeception": "^4.0",
@@ -28,8 +29,8 @@
         "sweetchuck/lint-report": "1.x-dev",
         "sweetchuck/robo-git": "1.x-dev",
         "sweetchuck/robo-phpcs": "1.x-dev",
-        "symfony/error-handler": "^5.0",
-        "symfony/yaml": "^4.0 || ^5.0",
+        "symfony/error-handler": "^5.4",
+        "symfony/var-dumper": "^5.4",
         "webmozart/path-util": "^2.3"
     },
     "autoload": {
@@ -39,13 +40,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Sweetchuck\\Robo\\Drush\\Composer\\": "src-dev/Composer/",
-            "Sweetchuck\\Robo\\Drush\\Test\\Helper\\": "tests/_support/Helper/",
             "Sweetchuck\\Robo\\Drush\\Tests\\Unit\\": "tests/unit/",
-            "Sweetchuck\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/"
+            "Sweetchuck\\Robo\\Drush\\Tests\\Acceptance\\": "tests/acceptance/",
+            "Sweetchuck\\Robo\\Drush\\Tests\\": "tests/_support/"
         }
-    },
-    "scripts": {},
-    "scripts-descriptions": {},
-    "extra": {}
+    }
 }
