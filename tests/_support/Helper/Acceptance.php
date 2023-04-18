@@ -1,8 +1,9 @@
 <?php
 
-namespace Sweetchuck\Robo\Drush\Test\Helper;
+namespace Sweetchuck\Robo\Drush\Tests\Helper;
 
-class Acceptance extends \Codeception\Module
+use Codeception\Module;
+
+class Acceptance extends Module
 {
-
 }

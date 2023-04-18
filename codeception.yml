@@ -1,7 +1,7 @@
 
-namespace: Sweetchuck\Robo\Drush\Test
+namespace: 'Sweetchuck\Robo\Drush\Tests'
 
-actor: Tester
+actor: 'Tester'
 
 paths:
     tests: 'tests'
